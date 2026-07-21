@@ -45,3 +45,12 @@ Enregistre toutes les demandes de réservation et leurs statuts d'approbation.
 | `date_fin` | DATETIME | Date et heure de fin de la réservation | NOT NULL |
 | `statut` | ENUM | État actuel de la réservation | DEFAULT 'en_attente' ('en_attente', 'validee', 'refusee') |
 | `date_creation` | TIMESTAMP | Date de la demande | DEFAULT CURRENT_TIMESTAMP |
+
+### 4. Création d'utilisateur MySQL dédié
+Un user dédié qui n'a accès qu'à la base de l'app au lieu de `root`.
+
+```SQL
+CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'votre_mot_de_passe_securise';
+GRANT ALL PRIVILEGES ON gestion_salles.* TO 'app_user'@'localhost';
+FLUSH PRIVILEGES;
+```

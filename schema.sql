@@ -31,3 +31,7 @@ CREATE TABLE reservations (
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
     FOREIGN KEY (salle_id) REFERENCES salles(id) ON DELETE CASCADE
 );
+
+CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'teny_miafina';
+GRANT ALL PRIVILEGES ON gestion_salles.* TO 'app_user'@'localhost';
+FLUSH PRIVILEGES;
