@@ -7,11 +7,16 @@ session_start();
 // Inclusion des dépendances
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/Models/User.php';
+require_once __DIR__ . '/../src/Models/Salle.php';
 require_once __DIR__ . '/../src/Controllers/AuthController.php';
+require_once __DIR__ . '/../src/Controllers/SalleController.php';
 
 // Initialisation des objets MVC
 $userModel = new User($pdo);
+$salleModel = new Salle($pdo);
+
 $authController = new AuthController($userModel);
+$salleController = new SalleController($salleModel);
 
 // Recuperation de l'URL demandee
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -39,6 +44,31 @@ switch ($uri) {
         }
         // Chargement de la vue du tableau de bord
         require __DIR__ . '/../src/Views/dashboard/index.php';
+        break;
+
+    // Routes pour la gestion des salles (US04, US05)
+    case '/salles':
+        $salleController->index();
+        break;
+
+    case '/salles/voir':
+        $salleController->show();
+        break;
+
+    case '/salles/creer':
+        $salleController->create();
+        break;
+
+    case '/salles/editer':
+        $salleController->edit();
+        break;
+
+    case '/salles/toggle-statut':
+        $salleController->toggleStatus();
+        break;
+
+    case '/salles/supprimer':
+        $salleController->delete();
         break;
         
     default:
