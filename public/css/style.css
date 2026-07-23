@@ -1,0 +1,227 @@
+/* public/css/style.css - Design centralisé de l'application */
+
+:root {
+    --primary-color: #0d6efd;
+    --primary-hover: #0b5ed7;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --bg-light: #f8f9fa;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #212529;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main.content-wrapper {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+.nav-link {
+    transition: opacity 0.2s ease;
+}
+
+.nav-link:hover {
+    opacity: 0.9;
+}
+
+/* Cartes & Animation Hover */
+.card-salle, .dashboard-card {
+    transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border-radius: 12px !important;
+}
+
+.card-salle:hover, .dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow-hover) !important;
+}
+
+.icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+/* Badges Équipements */
+.badge-equipment {
+    background-color: #e9ecef;
+    color: #495057;
+    font-weight: 500;
+    font-size: 0.8rem;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.eq-chip {
+    background-color: #eef2ff;
+    color: #3730a3;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px;
+    border: 1px solid #c7d2fe;
+}
+
+/* Custom Calendar Styling */
+#calendar {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+}
+
+.fc-event {
+    cursor: pointer;
+    border-radius: 6px !important;
+    padding: 3px 6px !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.fc-event:hover {
+    opacity: 0.92;
+    transform: scale(1.01);
+    filter: brightness(0.96);
+}
+
+.fc-timegrid-event .fc-event-main {
+    padding: 4px 6px !important;
+}
+
+.legend-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+/* Onglets de filtrage rapide des salles */
+.room-pills .btn {
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.88rem;
+    padding: 6px 14px;
+    transition: all 0.2s ease;
+}
+
+/* Table de Planning Matrice par Salle (Vue Grille) */
+.table-planning {
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table-planning th {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    padding: 14px 10px;
+    vertical-align: middle;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.table-planning td {
+    padding: 12px 10px;
+    vertical-align: top;
+    border-bottom: 1px solid #f1f5f9;
+    border-right: 1px solid #f8fafc;
+    min-width: 130px;
+}
+
+.table-planning tr:hover td {
+    background-color: #fafafa;
+}
+
+.table-planning .day-header-today {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+}
+
+.table-planning .salle-col {
+    min-width: 180px;
+    background-color: #f8fafc;
+    font-weight: 600;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.02);
+}
+
+.slot-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left-width: 4px;
+    border-radius: 6px;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.slot-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+}
+
+.slot-card.statut-validee {
+    border-left-color: #198754;
+    background-color: #f0fdf4;
+}
+
+.slot-card.statut-en_attente {
+    border-left-color: #fd7e14;
+    background-color: #fff7ed;
+}
+
+.slot-card.statut-refusee {
+    border-left-color: #dc3545;
+    background-color: #fef2f2;
+}
+
+.slot-free {
+    background-color: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    color: #64748b;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.8rem;
+    text-align: center;
+}
