@@ -51,4 +51,4 @@ Cette application web permet la gestion centralisée des réservations de salles
 - 📄 [Jour 2 - Mardi 21/07 : Authentification & Gestion des Rôles (US01, US02)](file:///home/isma/Project_mgmt/gestion-reservation-salles/docs/02_mardi_authentification_roles.md)
 - 📄 [Jour 3 - Mercredi 22/07 : Gestion des Salles & Équipements CRUD (US04, US05)](file:///home/isma/Project_mgmt/gestion-reservation-salles/docs/03_mercredi_gestion_salles.md)
 - 📄 [Jour 4 - Jeudi 23/07 : Consultation des Disponibilités (Calendrier) & Centralisation Design (US06)](file:///home/isma/Project_mgmt/gestion-reservation-salles/docs/04_jeudi_consultation_disponibilites.md)
-
+- 📄 [Jour 5 - Vendredi 24/07 : Revue du premier sprint, corrections et améliorations futures](file:///home/isma/Project_mgmt/gestion-reservation-salles/docs/sprint_1_review.md)
