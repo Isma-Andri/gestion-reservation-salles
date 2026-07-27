@@ -12,6 +12,7 @@ require_once __DIR__ . '/../src/Models/Reservation.php';
 require_once __DIR__ . '/../src/Controllers/AuthController.php';
 require_once __DIR__ . '/../src/Controllers/SalleController.php';
 require_once __DIR__ . '/../src/Controllers/CalendrierController.php';
+require_once __DIR__ . '/../src/Controllers/ReservationController.php';
 
 // Initialisation des objets MVC
 $userModel = new User($pdo);
@@ -21,6 +22,7 @@ $reservationModel = new Reservation($pdo);
 $authController = new AuthController($userModel);
 $salleController = new SalleController($salleModel);
 $calendrierController = new CalendrierController($reservationModel, $salleModel);
+$reservationController = new ReservationController($reservationModel, $salleModel);
 
 // Recuperation de l'URL demandee
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -82,6 +84,27 @@ switch ($uri) {
 
     case '/calendrier/events':
         $calendrierController->events();
+        break;
+
+    // Routes pour la gestion des réservations (US07, US08)
+    case '/reservations':
+        $reservationController->index();
+        break;
+
+    case '/reservations/creer':
+        $reservationController->create();
+        break;
+
+    case '/reservations/voir':
+        $reservationController->show();
+        break;
+
+    case '/reservations/annuler':
+        $reservationController->cancel();
+        break;
+
+    case '/reservations/check-conflict':
+        $reservationController->checkConflictApi();
         break;
         
     default:

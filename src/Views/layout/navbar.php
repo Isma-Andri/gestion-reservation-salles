@@ -28,6 +28,11 @@ $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                             <i class="bi bi-calendar-week me-1"></i>Calendrier
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo strpos($currentUri, '/reservations') === 0 ? 'active fw-bold' : 'text-white'; ?>" href="/reservations">
+                            <i class="bi bi-bookmark-star me-1"></i>Réservations
+                        </a>
+                    </li>
                 </ul>
                 <div class="d-flex align-items-center text-white me-3">
                     <i class="bi bi-person-circle me-2 fs-5"></i>
