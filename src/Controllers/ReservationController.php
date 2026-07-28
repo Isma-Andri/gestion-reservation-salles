@@ -111,9 +111,9 @@ class ReservationController {
 
             // --- Création si aucune erreur ---
             if (empty($errors)) {
-                // Déterminer le statut initial selon le rôle (préparation US09)
+                // Déterminer le statut initial selon le rôle (US09: Validation automatique)
                 $role = $_SESSION['role'] ?? '';
-                $statut = 'en_attente'; // Par défaut en attente
+                $statut = ($role === 'enseignant' || $role === 'admin') ? 'validee' : 'en_attente';
 
                 $newId = $this->reservationModel->create(
                     $_SESSION['utilisateur_id'],
@@ -274,6 +274,88 @@ class ReservationController {
             'hasConflict' => !empty($conflicts),
             'conflicts' => $formatted
         ]);
+        exit;
+    }
+    /**
+     * Liste des réservations en attente (US10 - pour logistique et admin)
+     */
+    public function validations() {
+        $this->requireAuth();
+        
+        $role = $_SESSION['role'];
+        if ($role !== 'admin' && $role !== 'logistique') {
+            $_SESSION['flash_error'] = "Accès refusé. Seul le service logistique ou un administrateur peut valider les réservations.";
+            header("Location: /dashboard");
+            exit;
+        }
+
+        $pendingReservations = $this->reservationModel->getPendingForValidation();
+        $pageTitle = "Validation des Réservations";
+        
+        require __DIR__ . '/../Views/reservations/validations.php';
+    }
+
+    /**
+     * Valide une réservation (US10)
+     */
+    public function validate() {
+        $this->requireAuth();
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /reservations/validations");
+            exit;
+        }
+
+        $role = $_SESSION['role'];
+        if ($role !== 'admin' && $role !== 'logistique') {
+            $_SESSION['flash_error'] = "Action non autorisée.";
+            header("Location: /dashboard");
+            exit;
+        }
+
+        $id = (int)($_POST['id'] ?? 0);
+        if ($id > 0) {
+            $result = $this->reservationModel->updateStatut($id, 'validee');
+            if ($result) {
+                $_SESSION['flash_success'] = "Réservation #$id validée avec succès.";
+            } else {
+                $_SESSION['flash_error'] = "Erreur lors de la validation de la réservation.";
+            }
+        }
+        
+        header("Location: /reservations/validations");
+        exit;
+    }
+
+    /**
+     * Refuse/rejette une réservation (US10)
+     */
+    public function reject() {
+        $this->requireAuth();
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /reservations/validations");
+            exit;
+        }
+
+        $role = $_SESSION['role'];
+        if ($role !== 'admin' && $role !== 'logistique') {
+            $_SESSION['flash_error'] = "Action non autorisée.";
+            header("Location: /dashboard");
+            exit;
+        }
+
+        $id = (int)($_POST['id'] ?? 0);
+        if ($id > 0) {
+            $result = $this->reservationModel->updateStatut($id, 'refusee');
+            if ($result) {
+                $_SESSION['flash_success'] = "Réservation #$id refusée.";
+            } else {
+                $_SESSION['flash_error'] = "Erreur lors du refus de la réservation.";
+            }
+        }
+        
+        header("Location: /reservations/validations");
         exit;
     }
 }

@@ -29,10 +29,17 @@ $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo strpos($currentUri, '/reservations') === 0 ? 'active fw-bold' : 'text-white'; ?>" href="/reservations">
+                        <a class="nav-link <?php echo strpos($currentUri, '/reservations') === 0 && $currentUri !== '/reservations/validations' ? 'active fw-bold' : 'text-white'; ?>" href="/reservations">
                             <i class="bi bi-bookmark-star me-1"></i>Réservations
                         </a>
                     </li>
+                    <?php if (in_array($_SESSION['role'], ['admin', 'logistique'])): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $currentUri === '/reservations/validations' ? 'active fw-bold' : 'text-white'; ?>" href="/reservations/validations">
+                            <i class="bi bi-shield-check me-1"></i>Validations
+                        </a>
+                    </li>
+                    <?php endif; ?>
                 </ul>
                 <div class="d-flex align-items-center text-white me-3">
                     <i class="bi bi-person-circle me-2 fs-5"></i>

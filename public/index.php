@@ -86,7 +86,19 @@ switch ($uri) {
         $calendrierController->events();
         break;
 
-    // Routes pour la gestion des réservations (US07, US08)
+    // Routes pour la gestion des réservations (US07, US08, US09, US10)
+    case '/reservations/validations':
+        $reservationController->validations();
+        break;
+
+    case '/reservations/validate':
+        $reservationController->validate();
+        break;
+
+    case '/reservations/reject':
+        $reservationController->reject();
+        break;
+
     case '/reservations':
         $reservationController->index();
         break;
