@@ -13,7 +13,7 @@ require __DIR__ . '/../layout/navbar.php';
             <h2 class="fw-bold mb-1">
                 <i class="bi bi-calendar3 text-primary me-2"></i>Planning & Disponibilités des Salles
             </h2>
-            <p class="text-muted mb-0">Consultez l'occupation des salles par calendrier graphique ou par grille d'emploi du temps (US06)</p>
+            <p class="text-muted mb-0">Consultez l'occupation des salles par calendrier graphique ou par grille d'emploi du temps</p>
         </div>
         
         <!-- Selecteur de Vue (Calendrier vs Grille) -->
@@ -310,9 +310,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return '/calendrier/events?salle_id=' + salleId + '&statut=' + encodeURIComponent(statut);
     }
 
-    // Initialisation FullCalendar avec paramètres optimisés pour le mode semaine
+    // Configuration réactive pour mobile vs ordinateur
+    var isMobile = window.innerWidth < 768;
+    var defaultInitialView = isMobile ? 'listWeek' : 'timeGridWeek';
+
+    // Initialisation FullCalendar avec adaptation mobile
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek', // Par défaut en vue Semaine optimisée
+        initialView: defaultInitialView,
         locale: 'fr',
         slotMinTime: '07:30:00',     // Limite les heures inutiles de la nuit
         slotMaxTime: '20:30:00',     // Heure de fin d'activité
@@ -320,8 +324,13 @@ document.addEventListener('DOMContentLoaded', function() {
         allDaySlot: false,           // Masque la rangée "toute la journée"
         nowIndicator: true,          // Ligne rouge indiquant l'heure actuelle
         expandRows: true,
-        height: 'auto',
-        headerToolbar: {
+        handleWindowResize: true,
+        height: isMobile ? 550 : 'auto',
+        headerToolbar: isMobile ? {
+            left: 'prev,next',
+            center: 'title',
+            right: 'listWeek,timeGridDay,timeGridWeek'
+        } : {
             left: 'prev,next today',
             center: 'title',
             right: 'timeGridWeek,dayGridMonth,timeGridDay,listWeek'
@@ -358,6 +367,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     calendar.render();
+
+    // Adapter dynamiquement la vue lors du redimensionnement d'écran
+    window.addEventListener('resize', function() {
+        var mobileNow = window.innerWidth < 768;
+        if (mobileNow && calendar.view.type === 'timeGridWeek') {
+            calendar.changeView('listWeek');
+        }
+    });
 
     function updateCalendarEvents() {
         var newUrl = getEventsUrl();

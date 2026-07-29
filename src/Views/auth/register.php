@@ -47,7 +47,7 @@ require __DIR__ . '/../layout/header.php';
                             <label class="form-label fw-semibold">Adresse Email</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                <input type="email" name="email" class="form-control" placeholder="nom@domaine.fr" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
+                                <input type="email" name="email" class="form-control" placeholder="nom@domaine.mg" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
                             </div>
                         </div>
 
@@ -55,7 +55,10 @@ require __DIR__ . '/../layout/header.php';
                             <label class="form-label fw-semibold">Mot de passe</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input type="password" name="mot_de_passe" class="form-control" placeholder="••••••••" required>
+                                <input type="password" id="inputPassword" name="mot_de_passe" class="form-control" placeholder="••••••••" required>
+                                <button type="button" class="btn btn-outline-secondary" id="btnTogglePassword" title="Afficher/Masquer le mot de passe">
+                                    <i class="bi bi-eye" id="iconTogglePassword"></i>
+                                </button>
                             </div>
                         </div>
 
@@ -83,5 +86,25 @@ require __DIR__ . '/../layout/header.php';
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var btnToggle = document.getElementById('btnTogglePassword');
+    var inputPass = document.getElementById('inputPassword');
+    var iconToggle = document.getElementById('iconTogglePassword');
+
+    if (btnToggle && inputPass && iconToggle) {
+        btnToggle.addEventListener('click', function() {
+            if (inputPass.type === 'password') {
+                inputPass.type = 'text';
+                iconToggle.className = 'bi bi-eye-slash';
+            } else {
+                inputPass.type = 'password';
+                iconToggle.className = 'bi bi-eye';
+            }
+        });
+    }
+});
+</script>
 
 <?php require __DIR__ . '/../layout/footer.php'; ?>

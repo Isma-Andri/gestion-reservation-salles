@@ -225,3 +225,26 @@ footer {
     font-size: 0.8rem;
     text-align: center;
 }
+
+/* Optimisation pour les écrans mobiles (Xiaomi 12 Pro & smartphones) */
+@media (max-width: 767.98px) {
+    #calendar {
+        padding: 10px;
+        overflow-x: auto;
+    }
+    .fc-header-toolbar {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .fc-toolbar-chunk {
+        display: flex;
+        justify-content: center;
+    }
+    .fc-button {
+        padding: 4px 8px !important;
+        font-size: 0.8rem !important;
+    }
+    .fc-toolbar-title {
+        font-size: 1.1rem !important;
+    }
+}

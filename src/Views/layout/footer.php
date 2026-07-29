@@ -3,7 +3,7 @@
 
 <footer class="bg-white border-top py-3 mt-5 text-center text-muted small">
     <div class="container">
-        <span>&copy; <?php echo date('Y'); ?> Application de Gestion et Réservation de Salles. Tous droits réservés.</span>
+        <span>&copy; <?php echo date('Y'); ?> Application de Gestion et Réservation de Salles — <strong>Ismaël Andrimalala (MIT - MISA)</strong>. Tous droits réservés.</span>
     </div>
 </footer>
 
