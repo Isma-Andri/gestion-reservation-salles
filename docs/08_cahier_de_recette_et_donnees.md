@@ -31,29 +31,29 @@ Ce document fournit les **données de démonstration** intégrées en base MySQL
 ## 📋 Liste Complète des Scénarios de Test (Cahier de Recette)
 
 ### 1. Module Authentification & Sécurité (US01, US02, US18)
-- [ ] **TC-01 : Connexion Réussie**
+- [x] **TC-01 : Connexion Réussie**
   - **Action** : Se connecter sur `/login` avec `hery.rakoto@univ.mg` / `password123`.
   - **Résultat attendu** : Redirection vers le tableau de bord (`/dashboard`), affichage du nom et badge `enseignant`.
-- [ ] **TC-02 : Connexion Échouée**
+- [x] **TC-02 : Connexion Échouée**
   - **Action** : Saisir un mot de passe erroné.
   - **Résultat attendu** : Message d'erreur clair "Identifiants incorrects".
-- [ ] **TC-03 : Inscription Nouvel Utilisateur**
+- [x] **TC-03 : Inscription Nouvel Utilisateur**
   - **Action** : Aller sur `/register`, remplir le formulaire et choisir le rôle `association`.
   - **Résultat attendu** : Compte créé, mot de passe chiffré en BDD via bcrypt, redirection vers login avec message de succès.
-- [ ] **TC-04 : Déconnexion**
+- [x] **TC-04 : Déconnexion**
   - **Action** : Cliquer sur "Déconnexion" dans la navbar.
   - **Résultat attendu** : Destruction de la session, redirection vers `/login`.
 
 ---
 
 ### 2. Module Gestion des Salles (US04, US05)
-- [ ] **TC-05 : Consultation & Recherche de Salles**
+- [x] **TC-05 : Consultation & Recherche de Salles**
   - **Action** : Visiter `/salles`, rechercher "Baobab" ou filtrer par capacité minimum (30).
   - **Résultat attendu** : Affichage dynamique des cartes des salles correspondantes.
-- [ ] **TC-06 : Consultation des Fiches Détails**
+- [x] **TC-06 : Consultation des Fiches Détails**
   - **Action** : Cliquer sur "Détails" de l'Amphi Ankatso.
   - **Résultat attendu** : Fiche complète affichant capacité, badges d'équipements et bouton de réservation rapide.
-- [ ] **TC-07 : CRUD Salles (Administrateur/Logistique)**
+- [x] **TC-07 : CRUD Salles (Administrateur/Logistique)**
   - **Action** : Se connecter en `tahina.admin@univ.mg`, ajouter/éditer une salle.
   - **Résultat attendu** : Ajout/Modification enregistrée, mise à jour dans la liste.
 
@@ -63,46 +63,47 @@ Ce document fournit les **données de démonstration** intégrées en base MySQL
 - [ ] **TC-08 : Vue Calendrier Graphique (FullCalendar)**
   - **Action** : Aller sur `/calendrier`, basculer entre vues *Semaine*, *Mois*, *Jour* et *Liste*.
   - **Résultat attendu** : Affichage fluide des créneaux de 07:30 à 20:30 avec codes couleurs (Vert = Validée, Orange = En attente, Rouge = Refusée).
-- [ ] **TC-09 : Vue Grille de Planning par Salle**
+  - **Remarque:**: Ratsy be amin'ny phone.
+- [x] **TC-09 : Vue Grille de Planning par Salle**
   - **Action** : Sur `/calendrier`, cliquer sur "Vue Grille par Salle".
   - **Résultat attendu** : Matrice claire avec les salles en lignes et les 7 jours de la semaine en colonnes.
-- [ ] **TC-10 : Filtrage par Salle**
+- [x] **TC-10 : Filtrage par Salle**
   - **Action** : Cliquer sur le pill de la salle "Amphi Ankatso - Ravinala".
   - **Résultat attendu** : Le calendrier et la grille se mettent à jour pour n'afficher que cette salle.
 
 ---
 
 ### 4. Module Création de Réservation & Conflits (US07, US08)
-- [ ] **TC-11 : Création de Réservation Valide**
+- [x] **TC-11 : Création de Réservation Valide**
   - **Action** : Sur `/reservations/creer`, choisir la *Salle Baobab*, saisir un créneau futur disponible et valider.
   - **Résultat attendu** : Réservation créée avec succès.
-- [ ] **TC-12 : Détection de Conflit en Temps Réel (AJAX - US08)**
+- [x] **TC-12 : Détection de Conflit en Temps Réel (AJAX - US08)**
   - **Action** : Choisir une salle et saisir un créneau qui chevauche un cours existant (ex: 30/07/2026 de 09:00 à 10:00 sur Amphi Ankatso).
   - **Résultat attendu** : Alerte rouge instantanée indiquant le conflit, bouton de soumission désactivé.
-- [ ] **TC-13 : Blocage de Conflit Côté Serveur (US08)**
+- [x] **TC-13 : Blocage de Conflit Côté Serveur (US08)**
   - **Action** : Tenter d'envoyer le formulaire malgré un créneau occupé.
   - **Résultat attendu** : Rejet par le contrôleur avec message d'erreur et récapitulatif des réservations en conflit.
 
 ---
 
 ### 5. Module Validation Automatique & Manuelle (US09, US10)
-- [ ] **TC-14 : Validation Automatique Enseignant (US09)**
+- [x] **TC-14 : Validation Automatique Enseignant (US09)**
   - **Action** : Se connecter en `hery.rakoto@univ.mg` (Enseignant) et créer une réservation libre.
   - **Résultat attendu** : Le statut passe immédiatement à **Validée** (`validee`) sans action manuelle.
-- [ ] **TC-15 : Soumission Association (En Attente - US10)**
+- [x] **TC-15 : Soumission Association (En Attente - US10)**
   - **Action** : Se connecter en `andry.ranaivo@assoc-etudiants.mg` (Association) et réserver une salle.
   - **Résultat attendu** : La réservation est enregistrée avec le statut **En attente** (`en_attente`).
-- [ ] **TC-16 : Espace de Validation Logistique (US10)**
+- [x] **TC-16 : Espace de Validation Logistique (US10)**
   - **Action** : Se connecter en `voahirana.rabenja@logistique.mg`, aller sur `/reservations/validations`.
   - **Résultat attendu** : Liste de toutes les demandes en attente avec boutons "Valider" et "Refuser".
-- [ ] **TC-17 : Action de Validation / Refus**
+- [x] **TC-17 : Action de Validation / Refus**
   - **Action** : Cliquer sur "Valider" ou "Refuser" sur une demande.
   - **Résultat attendu** : Statut mis à jour en BDD, message de confirmation flash affiché.
 
 ---
 
 ### 6. Module Notifications Email (US11, US12, US13)
-- [ ] **TC-18 : Verification du Log d'Emails (`logs/emails.log`)**
+- [x] **TC-18 : Verification du Log d'Emails (`logs/emails.log`)**
   - **Action** : Après avoir créé/validé/refusé une réservation, consulter `logs/emails.log`.
   - **Résultat attendu** : Entrées d'emails enregistrées avec horodatage, sujet et destinataire.
 - [ ] **TC-19 : Notification de Confirmation (US11)**
