@@ -9,6 +9,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/Models/User.php';
 require_once __DIR__ . '/../src/Models/Salle.php';
 require_once __DIR__ . '/../src/Models/Reservation.php';
+require_once __DIR__ . '/../src/Services/NotificationService.php';
 require_once __DIR__ . '/../src/Controllers/AuthController.php';
 require_once __DIR__ . '/../src/Controllers/SalleController.php';
 require_once __DIR__ . '/../src/Controllers/CalendrierController.php';
@@ -18,11 +19,12 @@ require_once __DIR__ . '/../src/Controllers/ReservationController.php';
 $userModel = new User($pdo);
 $salleModel = new Salle($pdo);
 $reservationModel = new Reservation($pdo);
+$notificationService = new NotificationService();
 
 $authController = new AuthController($userModel);
 $salleController = new SalleController($salleModel);
 $calendrierController = new CalendrierController($reservationModel, $salleModel);
-$reservationController = new ReservationController($reservationModel, $salleModel);
+$reservationController = new ReservationController($reservationModel, $salleModel, $notificationService);
 
 // Recuperation de l'URL demandee
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

@@ -4,10 +4,12 @@
 class ReservationController {
     private $reservationModel;
     private $salleModel;
+    private $notificationService;
 
-    public function __construct($reservationModel, $salleModel) {
+    public function __construct($reservationModel, $salleModel, $notificationService = null) {
         $this->reservationModel = $reservationModel;
         $this->salleModel = $salleModel;
+        $this->notificationService = $notificationService ?? new NotificationService();
     }
 
     /**
@@ -125,7 +127,25 @@ class ReservationController {
                 );
 
                 if ($newId) {
-                    $_SESSION['flash_success'] = "Réservation créée avec succès ! (N° $newId) – Statut : en attente de validation.";
+                    $resDetails = $this->reservationModel->getById($newId);
+                    if ($resDetails) {
+                        $userEmail = $resDetails['demandeur_email'] ?? $_SESSION['email'] ?? '';
+                        $userName = $resDetails['demandeur_nom'] ?? ($_SESSION['prenom'] . ' ' . $_SESSION['nom']);
+
+                        if ($statut === 'validee') {
+                            // US11: Email de confirmation si validée automatiquement (enseignant/admin)
+                            $this->notificationService->sendConfirmationEmail($userEmail, $userName, $resDetails);
+                            // US13: Notification de changement de statut
+                            $this->notificationService->sendStatusChangeEmail($userEmail, $userName, $resDetails, 'non_creee', 'validee');
+                            $_SESSION['flash_success'] = "Réservation N° $newId créée et validée automatiquement ! Un email de confirmation vous a été envoyé.";
+                        } else {
+                            // US13: Notification de soumission de statut en attente
+                            $this->notificationService->sendStatusChangeEmail($userEmail, $userName, $resDetails, 'non_creee', 'en_attente');
+                            $_SESSION['flash_success'] = "Réservation N° $newId créée avec succès ! Statut : en attente de validation par le service logistique.";
+                        }
+                    } else {
+                        $_SESSION['flash_success'] = "Réservation créée avec succès ! (N° $newId)";
+                    }
                     header("Location: /reservations");
                     exit;
                 } else {
@@ -230,7 +250,18 @@ class ReservationController {
 
         $result = $this->reservationModel->updateStatut($id, 'refusee');
         if ($result) {
-            $_SESSION['flash_success'] = "Réservation #$id annulée avec succès.";
+            $reservationAfter = $this->reservationModel->getById($id);
+            if ($reservationAfter) {
+                // US13: Envoi de la notification de changement de statut
+                $this->notificationService->sendStatusChangeEmail(
+                    $reservationAfter['demandeur_email'],
+                    $reservationAfter['demandeur_nom'],
+                    $reservationAfter,
+                    'en_attente',
+                    'refusee'
+                );
+            }
+            $_SESSION['flash_success'] = "Réservation #$id annulée avec succès. Une notification par email a été générée.";
         } else {
             $_SESSION['flash_error'] = "Erreur lors de l'annulation.";
         }
@@ -296,7 +327,7 @@ class ReservationController {
     }
 
     /**
-     * Valide une réservation (US10)
+     * Valide une réservation (US10, US11, US13)
      */
     public function validate() {
         $this->requireAuth();
@@ -315,9 +346,27 @@ class ReservationController {
 
         $id = (int)($_POST['id'] ?? 0);
         if ($id > 0) {
+            $reservationBefore = $this->reservationModel->getById($id);
             $result = $this->reservationModel->updateStatut($id, 'validee');
             if ($result) {
-                $_SESSION['flash_success'] = "Réservation #$id validée avec succès.";
+                $reservationAfter = $this->reservationModel->getById($id);
+                if ($reservationAfter) {
+                    // US11: Envoi de l'email de confirmation
+                    $this->notificationService->sendConfirmationEmail(
+                        $reservationAfter['demandeur_email'],
+                        $reservationAfter['demandeur_nom'],
+                        $reservationAfter
+                    );
+                    // US13: Envoi de la notification de changement de statut
+                    $this->notificationService->sendStatusChangeEmail(
+                        $reservationAfter['demandeur_email'],
+                        $reservationAfter['demandeur_nom'],
+                        $reservationAfter,
+                        'en_attente',
+                        'validee'
+                    );
+                }
+                $_SESSION['flash_success'] = "Réservation #$id validée avec succès. Un email de confirmation a été envoyé au demandeur.";
             } else {
                 $_SESSION['flash_error'] = "Erreur lors de la validation de la réservation.";
             }
@@ -328,7 +377,7 @@ class ReservationController {
     }
 
     /**
-     * Refuse/rejette une réservation (US10)
+     * Refuse/rejette une réservation (US10, US12, US13)
      */
     public function reject() {
         $this->requireAuth();
@@ -346,10 +395,31 @@ class ReservationController {
         }
 
         $id = (int)($_POST['id'] ?? 0);
+        $reason = trim($_POST['reason'] ?? 'Créneau non disponible ou contrainte logistique');
+
         if ($id > 0) {
+            $reservationBefore = $this->reservationModel->getById($id);
             $result = $this->reservationModel->updateStatut($id, 'refusee');
             if ($result) {
-                $_SESSION['flash_success'] = "Réservation #$id refusée.";
+                $reservationAfter = $this->reservationModel->getById($id);
+                if ($reservationAfter) {
+                    // US12: Envoi de l'email de refus
+                    $this->notificationService->sendRefusalEmail(
+                        $reservationAfter['demandeur_email'],
+                        $reservationAfter['demandeur_nom'],
+                        $reservationAfter,
+                        $reason
+                    );
+                    // US13: Envoi de la notification de changement de statut
+                    $this->notificationService->sendStatusChangeEmail(
+                        $reservationAfter['demandeur_email'],
+                        $reservationAfter['demandeur_nom'],
+                        $reservationAfter,
+                        'en_attente',
+                        'refusee'
+                    );
+                }
+                $_SESSION['flash_success'] = "Réservation #$id refusée. Un email d'information a été envoyé au demandeur.";
             } else {
                 $_SESSION['flash_error'] = "Erreur lors du refus de la réservation.";
             }
