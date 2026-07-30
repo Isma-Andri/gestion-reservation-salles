@@ -24,5 +24,24 @@ class User {
         );
         return $stmt->execute([$nom, $prenom, $email, $hash, $role]);
     }
+
+    // Récupère un utilisateur par son ID
+    public function findById($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM utilisateurs WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Met à jour le rôle d'un utilisateur (US02 – Admin)
+    public function updateRole($id, $role) {
+        $stmt = $this->pdo->prepare("UPDATE utilisateurs SET role = ? WHERE id = ?");
+        return $stmt->execute([$role, $id]);
+    }
+
+    // Supprime un utilisateur (US02 – Admin)
+    public function delete($id) {
+        $stmt = $this->pdo->prepare("DELETE FROM utilisateurs WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
 }
 ?>
