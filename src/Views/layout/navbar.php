@@ -40,6 +40,13 @@ $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                         </a>
                     </li>
                     <?php endif; ?>
+                    <?php if ($_SESSION['role'] === 'admin'): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo strpos($currentUri, '/admin') === 0 ? 'active fw-bold' : 'text-white'; ?>" href="/admin/stats">
+                            <i class="bi bi-bar-chart-line me-1"></i>Admin
+                        </a>
+                    </li>
+                    <?php endif; ?>
                 </ul>
                 <div class="d-flex align-items-center text-white me-3">
                     <i class="bi bi-person-circle me-2 fs-5"></i>

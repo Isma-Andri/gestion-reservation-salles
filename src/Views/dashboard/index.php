@@ -18,9 +18,15 @@ require __DIR__ . '/../layout/navbar.php';
                     <span class="text-secondary small"><i class="bi bi-mortarboard me-1"></i>MIT - MISA</span>
                 </p>
             </div>
+            <?php if ($_SESSION['role'] === 'admin'): ?>
+            <a href="/admin/stats" class="btn btn-primary shadow-sm">
+                <i class="bi bi-bar-chart-line me-1"></i>Statistiques Admin
+            </a>
+            <?php else: ?>
             <a href="/reservations/creer" class="btn btn-primary shadow-sm">
                 <i class="bi bi-plus-circle me-1"></i>Nouvelle Réservation
             </a>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -128,6 +134,48 @@ require __DIR__ . '/../layout/navbar.php';
                         <p class="text-muted flex-grow-1">Ajoutez une nouvelle salle dans l'application avec sa capacité et ses équipements.</p>
                         <a href="/salles/creer" class="btn btn-outline-success w-100 mt-2">
                             <i class="bi bi-plus-lg me-1"></i>Ajouter une salle
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- Action rapide Admin -->
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm dashboard-card">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-box bg-dark text-white me-3">
+                                <i class="bi bi-bar-chart-line"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0">Statistiques</h5>
+                                <small class="text-muted">Tableau de bord admin</small>
+                            </div>
+                        </div>
+                        <p class="text-muted flex-grow-1">Consultez les statistiques d'utilisation, le taux d'occupation des salles et exportez les données.</p>
+                        <a href="/admin/stats" class="btn btn-dark w-100 mt-2">
+                            <i class="bi bi-graph-up me-1"></i>Voir les statistiques
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm dashboard-card">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-box bg-secondary text-white me-3">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0">Utilisateurs</h5>
+                                <small class="text-muted">Gestion des comptes</small>
+                            </div>
+                        </div>
+                        <p class="text-muted flex-grow-1">Gérez les comptes d'utilisateurs, modifiez les rôles et supprimez des comptes.</p>
+                        <a href="/admin/users" class="btn btn-outline-secondary w-100 mt-2">
+                            <i class="bi bi-people me-1"></i>Gérer les utilisateurs
                         </a>
                     </div>
                 </div>
