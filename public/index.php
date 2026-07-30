@@ -4,27 +4,46 @@
 // Demarrage de la session pour toutes les pages
 session_start();
 
+// US18 – Sécurité : expiration automatique de session après 30 min d'inactivité
+define('SESSION_TIMEOUT', 1800);
+if (isset($_SESSION['utilisateur_id'])) {
+    $lastActivity = $_SESSION['last_activity'] ?? time();
+    if ((time() - $lastActivity) > SESSION_TIMEOUT) {
+        session_unset();
+        session_destroy();
+        session_start();
+        $_SESSION['flash_error'] = "Votre session a expiré. Veuillez vous reconnecter.";
+        header("Location: /login");
+        exit;
+    }
+    $_SESSION['last_activity'] = time();
+}
+
 // Inclusion des dépendances
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/Models/User.php';
 require_once __DIR__ . '/../src/Models/Salle.php';
 require_once __DIR__ . '/../src/Models/Reservation.php';
+require_once __DIR__ . '/../src/Models/Stats.php';
 require_once __DIR__ . '/../src/Services/NotificationService.php';
 require_once __DIR__ . '/../src/Controllers/AuthController.php';
 require_once __DIR__ . '/../src/Controllers/SalleController.php';
 require_once __DIR__ . '/../src/Controllers/CalendrierController.php';
 require_once __DIR__ . '/../src/Controllers/ReservationController.php';
+require_once __DIR__ . '/../src/Controllers/AdminController.php';
 
 // Initialisation des objets MVC
 $userModel = new User($pdo);
 $salleModel = new Salle($pdo);
 $reservationModel = new Reservation($pdo);
+$statsModel = new Stats($pdo);
 $notificationService = new NotificationService();
 
 $authController = new AuthController($userModel);
 $salleController = new SalleController($salleModel);
 $calendrierController = new CalendrierController($reservationModel, $salleModel);
 $reservationController = new ReservationController($reservationModel, $salleModel, $notificationService);
+$adminController = new AdminController($statsModel, $userModel);
 
 // Recuperation de l'URL demandee
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -121,9 +140,22 @@ switch ($uri) {
         $reservationController->checkConflictApi();
         break;
         
+    // Routes Admin (US14, US15, US16, US02)
+    case '/admin/stats':
+        $adminController->stats();
+        break;
+
+    case '/admin/users':
+        $adminController->users();
+        break;
+
+    case '/admin/export-csv':
+        $adminController->exportCsv();
+        break;
+
     default:
         http_response_code(404);
-        echo "Page introuvable (404)";
+        require __DIR__ . '/../src/Views/errors/404.php';
         break;
 }
 ?>
