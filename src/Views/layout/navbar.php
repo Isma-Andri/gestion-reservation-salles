@@ -48,12 +48,14 @@ $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                     </li>
                     <?php endif; ?>
                 </ul>
-                <div class="d-flex align-items-center text-white me-3">
-                    <i class="bi bi-person-circle me-2 fs-5"></i>
-                    <span>
-                        <?php echo htmlspecialchars($_SESSION['prenom'] . ' ' . $_SESSION['nom']); ?> 
-                        <span class="badge bg-light text-primary text-capitalize ms-1"><?php echo htmlspecialchars($_SESSION['role']); ?></span>
-                    </span>
+                <div class="d-flex align-items-center me-2">
+                    <a href="/profil" class="text-white text-decoration-none d-flex align-items-center gap-2 py-1 px-2 rounded hover-light" title="Mon profil">
+                        <i class="bi bi-person-circle fs-5"></i>
+                        <span class="d-none d-lg-inline">
+                            <?php echo htmlspecialchars($_SESSION['prenom'] . ' ' . $_SESSION['nom']); ?> 
+                            <span class="badge bg-light text-primary text-capitalize ms-1"><?php echo htmlspecialchars($_SESSION['role']); ?></span>
+                        </span>
+                    </a>
                 </div>
                 <a href="/logout" class="btn btn-outline-light btn-sm">
                     <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
