@@ -44,7 +44,7 @@ $totalRes = max(1, (int)$res['total']); // éviter division par 0
             <a href="/admin/users" class="btn btn-outline-secondary">
                 <i class="bi bi-people me-1"></i>Gérer les Utilisateurs
             </a>
-            <a href="/admin/export-csv" class="btn btn-success">
+            <a href="/admin/export" class="btn btn-success">
                 <i class="bi bi-file-earmark-spreadsheet me-1"></i>Exporter CSV
             </a>
         </div>
@@ -236,7 +236,7 @@ $totalRes = max(1, (int)$res['total']); // éviter division par 0
     <div class="card border-0 shadow-sm mt-4">
         <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
             <h5 class="fw-bold mb-0"><i class="bi bi-activity text-success me-2"></i>Activité récente (10 dernières)</h5>
-            <a href="/admin/export-csv" class="btn btn-sm btn-outline-success">
+            <a href="/admin/export" class="btn btn-sm btn-outline-success">
                 <i class="bi bi-download me-1"></i>Exporter tout
             </a>
         </div>

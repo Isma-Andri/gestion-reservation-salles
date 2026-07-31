@@ -31,6 +31,7 @@ require_once __DIR__ . '/../src/Controllers/SalleController.php';
 require_once __DIR__ . '/../src/Controllers/CalendrierController.php';
 require_once __DIR__ . '/../src/Controllers/ReservationController.php';
 require_once __DIR__ . '/../src/Controllers/AdminController.php';
+require_once __DIR__ . '/../src/Controllers/ProfileController.php';
 
 // Initialisation des objets MVC
 $userModel = new User($pdo);
@@ -44,6 +45,7 @@ $salleController = new SalleController($salleModel);
 $calendrierController = new CalendrierController($reservationModel, $salleModel);
 $reservationController = new ReservationController($reservationModel, $salleModel, $notificationService);
 $adminController = new AdminController($statsModel, $userModel);
+$profileController = new ProfileController($userModel, $reservationModel);
 
 // Recuperation de l'URL demandee
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -140,6 +142,15 @@ switch ($uri) {
         $reservationController->checkConflictApi();
         break;
         
+    // Routes Profil utilisateur (US03)
+    case '/profil':
+        $profileController->show();
+        break;
+
+    case '/profil/modifier':
+        $profileController->edit();
+        break;
+
     // Routes Admin (US14, US15, US16, US02)
     case '/admin/stats':
         $adminController->stats();
@@ -147,6 +158,10 @@ switch ($uri) {
 
     case '/admin/users':
         $adminController->users();
+        break;
+
+    case '/admin/export':
+        $adminController->exportPage();
         break;
 
     case '/admin/export-csv':

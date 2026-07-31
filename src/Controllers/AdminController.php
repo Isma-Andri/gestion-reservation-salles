@@ -85,14 +85,31 @@ class AdminController {
     }
 
     /**
+     * Page d'export avec formulaire de filtrage visuel — US16
+     */
+    public function exportPage() {
+        $this->requireAdmin();
+
+        // Récupérer la liste des salles pour le filtre
+        $salles   = $this->statsModel->getAllSallesForFilter();
+        $pageTitle = "Export des données";
+        require __DIR__ . '/../Views/admin/export.php';
+    }
+
+    /**
      * Export CSV des réservations — US16
      */
     public function exportCsv() {
         $this->requireAdmin();
 
-        $statut  = trim($_GET['statut'] ?? '');
-        $salleId = (int)($_GET['salle_id'] ?? 0);
-        $data    = $this->statsModel->getAllForExport($statut ?: null, $salleId ?: null);
+        $statut    = trim($_GET['statut'] ?? '');
+        $salleId   = (int)($_GET['salle_id'] ?? 0);
+        $dateDebut = trim($_GET['date_debut'] ?? '');
+        $dateFin   = trim($_GET['date_fin'] ?? '');
+        $data      = $this->statsModel->getAllForExport(
+            $statut ?: null, $salleId ?: null,
+            $dateDebut ?: null, $dateFin ?: null
+        );
 
         $filename = 'reservations_export_' . date('Ymd_His') . '.csv';
         header('Content-Type: text/csv; charset=utf-8');

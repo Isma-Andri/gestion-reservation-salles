@@ -6,6 +6,8 @@ CREATE TABLE utilisateurs (
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
+    telephone VARCHAR(20) NULL,
+    photo_url VARCHAR(255) NULL,
     mot_de_passe VARCHAR(255) NOT NULL,
     role ENUM('enseignant', 'association', 'logistique', 'admin') NOT NULL,
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
