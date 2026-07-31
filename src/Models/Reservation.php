@@ -228,5 +228,22 @@ class Reservation {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Récupère toutes les réservations d'un utilisateur spécifique (US03 – Profil)
+     */
+    public function getAllByUser($userId) {
+        $stmt = $this->pdo->prepare("
+            SELECT r.*, 
+                   s.nom AS salle_nom,
+                   s.capacite AS salle_capacite
+            FROM reservations r
+            JOIN salles s ON r.salle_id = s.id
+            WHERE r.utilisateur_id = :uid
+            ORDER BY r.date_creation DESC
+        ");
+        $stmt->execute([':uid' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

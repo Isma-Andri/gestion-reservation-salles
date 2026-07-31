@@ -43,5 +43,34 @@ class User {
         $stmt = $this->pdo->prepare("DELETE FROM utilisateurs WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    // Met à jour les informations du profil (US03)
+    public function updateProfile($id, $nom, $prenom, $email, $telephone) {
+        // Vérifier si l'email est déjà utilisé par un autre utilisateur
+        $check = $this->pdo->prepare("SELECT id FROM utilisateurs WHERE email = ? AND id != ?");
+        $check->execute([$email, $id]);
+        if ($check->fetch()) {
+            throw new Exception("Cet email est déjà utilisé par un autre compte.");
+        }
+        $stmt = $this->pdo->prepare(
+            "UPDATE utilisateurs SET nom = ?, prenom = ?, email = ?, telephone = ? WHERE id = ?"
+        );
+        return $stmt->execute([$nom, $prenom, $email, $telephone ?: null, $id]);
+    }
+
+    // Met à jour le mot de passe après vérification de l'ancien (US03)
+    public function updatePassword($id, $currentPassword, $newPassword) {
+        // Récupérer le hash actuel
+        $user = $this->findById($id);
+        if (!$user || !password_verify($currentPassword, $user['mot_de_passe'])) {
+            throw new Exception("Mot de passe actuel incorrect.");
+        }
+        if (strlen($newPassword) < 6) {
+            throw new Exception("Le nouveau mot de passe doit contenir au moins 6 caractères.");
+        }
+        $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+        $stmt = $this->pdo->prepare("UPDATE utilisateurs SET mot_de_passe = ? WHERE id = ?");
+        return $stmt->execute([$hash, $id]);
+    }
 }
 ?>

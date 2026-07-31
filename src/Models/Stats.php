@@ -141,8 +141,9 @@ class Stats {
 
     /**
      * Export CSV des réservations — US16
+     * Filtres : statut, salle, date_debut_min, date_fin_max
      */
-    public function getAllForExport($statut = null, $salleId = null) {
+    public function getAllForExport($statut = null, $salleId = null, $dateDebutMin = null, $dateFinMax = null) {
         $sql = "
             SELECT r.id, 
                    CONCAT(u.prenom, ' ', u.nom) AS demandeur,
@@ -167,9 +168,25 @@ class Stats {
             $sql .= " AND r.salle_id = :salle_id";
             $params['salle_id'] = $salleId;
         }
+        if (!empty($dateDebutMin)) {
+            $sql .= " AND DATE(r.date_debut) >= :date_debut_min";
+            $params['date_debut_min'] = $dateDebutMin;
+        }
+        if (!empty($dateFinMax)) {
+            $sql .= " AND DATE(r.date_fin) <= :date_fin_max";
+            $params['date_fin_max'] = $dateFinMax;
+        }
         $sql .= " ORDER BY r.date_creation DESC";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Récupère la liste des salles pour les filtres d'export — US16
+     */
+    public function getAllSallesForFilter() {
+        $stmt = $this->pdo->query("SELECT id, nom FROM salles ORDER BY nom ASC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
